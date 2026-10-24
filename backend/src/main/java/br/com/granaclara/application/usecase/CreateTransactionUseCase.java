@@ -4,10 +4,12 @@ import br.com.granaclara.domain.model.Transaction;
 import br.com.granaclara.domain.model.TransactionType;
 import br.com.granaclara.domain.repository.TransactionRepository;
 import br.com.granaclara.application.dto.CreateTransactionRequest;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Service
 public class CreateTransactionUseCase {
 
     private final TransactionRepository repository;
