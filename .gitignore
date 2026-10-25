@@ -1,26 +1,54 @@
+.DS_Store
+Thumbs.db
+Desktop.ini
 
 # IDEs
 .idea/
-**/.idea/
-*.iml
 .vscode/
+*.iml
+.project
+.classpath
+.settings/
 
 # Java / Maven
-**/target/
+target/
 *.class
+*.jar
+*.war
+hs_err_pid*
+replay_pid*
 
-# Logs
-*.log
+# Node.js / React / Vite
+node_modules/
+dist/
+.vite/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# Environment variables and secrets
+# Variáveis de ambiente e segredos
 .env
 .env.*
 !.env.example
+!.env.sample
 
-# OS files
-.DS_Store
-Thumbs.db
+# Logs
+logs/
+*.log
 
-# Local configuration
-application-local.properties
-application-local.yml
+# Arquivos temporários
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# Banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker: dados persistidos localmente
+# Ajuste o caminho se seu projeto versiona arquivos nessa pasta.
+postgres-data/
