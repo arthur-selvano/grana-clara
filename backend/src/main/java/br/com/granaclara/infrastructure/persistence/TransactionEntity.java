@@ -56,4 +56,17 @@ public class TransactionEntity {
     public BigDecimal getAmount() {
         return amount;
     }
+
+
+    public void update(
+            String description,
+            BigDecimal amount,
+            LocalDate date,
+            TransactionType type
+    ) {
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
+    }
 }

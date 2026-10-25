@@ -6,10 +6,10 @@ import java.time.LocalDate;
 public class Transaction {
 
     private Long id;
-    private final String description;
-    private final BigDecimal amount;
-    private final LocalDate date;
-    private final TransactionType type;
+    private String description;
+    private BigDecimal amount;
+    private LocalDate date;
+    private TransactionType type;
 
     public Transaction(String description,
     BigDecimal amount,
@@ -44,6 +44,31 @@ public class Transaction {
         }
 
         this.id = id;
+    }
+
+
+    public void update(
+            String description,
+            BigDecimal amount,
+            LocalDate date,
+            TransactionType type
+    ) {
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("A descrição é obrigatória!");
+        }
+
+        if (amount == null || amount.signum() <= 0) {
+            throw new IllegalArgumentException("Valor deve ser maior que zero!");
+        }
+
+        if (date == null || type == null) {
+            throw new IllegalArgumentException("Data e tipo são obrigatórios!");
+        }
+
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
     }
 
     public Long getId() {

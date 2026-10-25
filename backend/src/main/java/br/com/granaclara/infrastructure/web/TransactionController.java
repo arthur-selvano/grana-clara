@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import br.com.granaclara.application.dto.FinancialSummaryResponse;
 import br.com.granaclara.application.usecase.GetFinancialSummaryUseCase;
 import br.com.granaclara.domain.model.Transaction;
+import br.com.granaclara.application.usecase.UpdateTransactionUseCase;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 public class TransactionController {
@@ -27,17 +31,22 @@ public class TransactionController {
     private final GetTransactionByIdUseCase getTransactionByIdUseCase;
     private final DeleteTransactionUseCase deleteTransactionUseCase;
     private final GetFinancialSummaryUseCase getFinancialSummaryUseCase;
+    private final UpdateTransactionUseCase updateTransactionUseCase;
 
-    public TransactionController(CreateTransactionUseCase createTransactionUseCase,
-                                 GetAllTransactionsUseCase getAllTransactionsUseCase,
-                                 GetTransactionByIdUseCase getTransactionByIdUseCase,
-                                 DeleteTransactionUseCase deleteTransactionUseCase,
-                                 GetFinancialSummaryUseCase getFinancialSummaryUseCase) {
+    public TransactionController(
+            CreateTransactionUseCase createTransactionUseCase,
+            GetAllTransactionsUseCase getAllTransactionsUseCase,
+            GetTransactionByIdUseCase getTransactionByIdUseCase,
+            DeleteTransactionUseCase deleteTransactionUseCase,
+            GetFinancialSummaryUseCase getFinancialSummaryUseCase,
+            UpdateTransactionUseCase updateTransactionUseCase
+    ) {
         this.createTransactionUseCase = createTransactionUseCase;
         this.getAllTransactionsUseCase = getAllTransactionsUseCase;
         this.getTransactionByIdUseCase = getTransactionByIdUseCase;
         this.deleteTransactionUseCase = deleteTransactionUseCase;
         this.getFinancialSummaryUseCase = getFinancialSummaryUseCase;
+        this.updateTransactionUseCase = updateTransactionUseCase;
     }
 
     @PostMapping("/transactions")
@@ -57,28 +66,38 @@ public class TransactionController {
 
     @GetMapping("/transactions/{id}")
     public ResponseEntity<Transaction> getTransactionById(
-            @PathVariable Long id) {
-
+            @PathVariable Long id
+    ) {
         return getTransactionByIdUseCase.execute(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new java.util.NoSuchElementException(
+                        "Transação não encontrada: " + id
+                ));
     }
-
 
     @DeleteMapping("/transactions/{id}")
     public ResponseEntity<Void> deleteTransaction(
-            @PathVariable Long id) {
-
-        try {
-            deleteTransactionUseCase.execute(id);
-            return ResponseEntity.noContent().build();
-        } catch (java.util.NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+            @PathVariable Long id
+    ) {
+        deleteTransactionUseCase.execute(id);
+        return ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/transactions/summary")
     public FinancialSummaryResponse getFinancialSummary() {
         return getFinancialSummaryUseCase.execute();
+    }
+
+
+    @PutMapping("/transactions/{id}")
+    public ResponseEntity<Transaction> updateTransaction(
+            @PathVariable Long id,
+            @Valid @RequestBody CreateTransactionRequest request
+    ) {
+        Transaction updatedTransaction =
+                updateTransactionUseCase.execute(id, request);
+
+        return ResponseEntity.ok(updatedTransaction);
     }
 }

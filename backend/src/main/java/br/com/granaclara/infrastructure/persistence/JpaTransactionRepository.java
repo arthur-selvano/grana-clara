@@ -19,19 +19,37 @@ public class JpaTransactionRepository implements TransactionRepository {
         this.springDataRepository = springDataRepository;
     }
 
+
     @Override
     public Transaction save(Transaction transaction) {
-        var entity = new TransactionEntity(
-                transaction.getDescription(),
-                transaction.getAmount(),
-                transaction.getDate(),
-                transaction.getType()
-        );
+        TransactionEntity entity;
+
+        if (transaction.getId() != null) {
+            entity = springDataRepository.findById(transaction.getId())
+                    .orElseThrow(() -> new java.util.NoSuchElementException(
+                            "Transação não encontrada: " + transaction.getId()
+                    ));
+
+            entity.update(
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    transaction.getType()
+            );
+        } else {
+            entity = new TransactionEntity(
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    transaction.getType()
+            );
+        }
 
         var savedEntity = springDataRepository.save(entity);
 
         return toDomain(savedEntity);
     }
+
 
     @Override
     public Optional<Transaction> findById(Long id) {
