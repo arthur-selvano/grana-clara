@@ -1,4 +1,4 @@
-# GranaClara 💚
+# GranaClara
 
 Aplicação de controle financeiro pessoal para registrar receitas e despesas, acompanhar o saldo e visualizar informações financeiras em um dashboard.
 
